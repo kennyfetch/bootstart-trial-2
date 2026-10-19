@@ -1,5 +1,4 @@
-# Template justfile. /init-project replaces it with the chosen stack pack's justfile.
-# Until then, the standard recipes only print a hint, and `selftest` validates every pack.
+# TypeScript stack: pnpm + Biome + tsc + Vitest. Recipe contract: docs/STACKS.md.
 
 # Windows: PowerShell 5.1 reports any failing command as exit code 1 (pass/fail stays correct;
 # read the output for the real code).
@@ -9,22 +8,33 @@ set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
 default:
     @{{ just_executable() }} --list
 
-setup: _not-initialized
-dev: _not-initialized
-format: _not-initialized
-fix: _not-initialized
-lint: _not-initialized
-typecheck: _not-initialized
-test: _not-initialized
-check: _not-initialized
+# Install dependencies (lockfile is frozen automatically in CI)
+setup:
+    pnpm install
 
-# Run setup + check in every stack pack (template maintenance)
-selftest:
-    {{ just_executable() }} --justfile stacks/python/justfile --working-directory stacks/python setup
-    {{ just_executable() }} --justfile stacks/python/justfile --working-directory stacks/python check
-    {{ just_executable() }} --justfile stacks/typescript/justfile --working-directory stacks/typescript setup
-    {{ just_executable() }} --justfile stacks/typescript/justfile --working-directory stacks/typescript check
+# Run the app locally (Vite dev server)
+dev:
+    pnpm exec vite
 
-[private]
-_not-initialized:
-    @echo "Template not initialized: run /init-project (or follow .claude/skills/init-project/SKILL.md)."
+# Format code in place (also run by the Claude Code edit hook)
+format:
+    pnpm exec biome format --write .
+
+# Format and apply safe lint fixes
+fix:
+    pnpm exec biome check --write .
+
+# Check formatting and lint rules without changing files
+lint:
+    pnpm exec biome check .
+
+# Static type checking
+typecheck:
+    pnpm exec tsc
+
+# Run tests with coverage; extra arguments go to Vitest
+test *args:
+    pnpm exec vitest run --coverage {{ args }}
+
+# Everything CI runs
+check: lint typecheck test

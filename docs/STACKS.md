@@ -22,15 +22,6 @@ Questions that move the choice: who maintains it later and what they know; where
 server, device, desktop); whether front-end and back-end should share code; deployment and hosting
 constraints; performance or footprint requirements.
 
-## Packs shipped in `stacks/`
-
-| Pack | Package manager | Format + lint | Types | Tests |
-|---|---|---|---|---|
-| `python` | uv | Ruff | Pyright (strict) | pytest + pytest-cov |
-| `typescript` | pnpm | Biome | tsc (strict) | Vitest + V8 coverage |
-
-A framework (FastAPI, React, …) is added on top of a pack during `init-project`, not shipped in it.
-
 ## Two stacks in one repository
 
 For example a Python API with a TypeScript front-end. Keep each stack self-contained and the

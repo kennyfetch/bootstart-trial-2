@@ -4,11 +4,13 @@ Snapshot of where the work stands, so anyone — human or AI — can pick it up 
 Overwritten (not appended) at the end of each session by the `handoff` workflow. Git is the log.
 Keep it under ~60 lines.
 
-**Last updated:** _YYYY-MM-DD_ · **Branch:** `main`
+**Last updated:** 2026-10-19 · **Branch:** `main`
 
 ## Current state
 
-- Template not initialized yet. Run the `init-project` workflow.
+- Project initialized from Bootstart: TypeScript + Vite + React (ADR 0001), team mode, MIT.
+- `just dev` serves an empty page (heading only); `just check` passes.
+- `src/pricing.ts` and its tests are the template's example module, kept as a conventions guide.
 
 ## In progress
 
@@ -16,12 +18,13 @@ Keep it under ~60 lines.
 
 ## Next steps
 
-1. Run `init-project`.
+1. First feature: convert a value between two length units (`/feature`).
+2. Delete `src/pricing.ts` and `tests/pricing.test.ts` once real code is tested.
 
 ## Pitfalls
 
-- _Things that surprised you and will surprise the next person._
+- Component tests run in jsdom (`vitest.config.ts`); `src/main.tsx` is excluded from coverage.
 
 ## Open questions
 
-- _Decisions waiting on someone._
+- _None._

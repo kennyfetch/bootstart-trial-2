@@ -5,10 +5,9 @@ Keep this file short: it is loaded in every session. Details live in `docs/`.
 
 ## Project
 
-<!-- Filled by /init-project. -->
-- **Name:** _not initialized — run the `init-project` workflow_
-- **Purpose:** _one sentence_
-- **Stack:** _see `docs/decisions/0001-*.md`_
+- **Name:** Bootstart Trial 2
+- **Purpose:** A web page that converts values between units of length, mass and temperature.
+- **Stack:** TypeScript + Vite + React, pnpm, Biome, Vitest — see `docs/decisions/0001-stack-choice.md`
 
 ## Start here
 
@@ -57,7 +56,6 @@ Claude Code runs them as `/<name>`. Other agents: read the file and follow it.
 
 | Workflow | Use it to |
 |---|---|
-| `init-project` | Turn this template into a real project (once) |
 | `feature` | Implement a feature or fix, tests first |
 | `test` | Add or improve tests for existing code |
 | `review` | Review the current diff against the conventions |

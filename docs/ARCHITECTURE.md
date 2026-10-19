@@ -5,17 +5,22 @@ behind choices belong in `docs/decisions/`.
 
 ## Purpose
 
-_What the system does and for whom, in two or three sentences._
+A web page that converts values between units of length, mass and temperature, for anyone who
+needs a quick conversion in the browser.
 
 ## Context
 
-_Users, external systems and services it talks to (APIs, databases, queues, files)._
+A static single-page app running in the browser. It talks to no external system: no API, no
+storage, no network calls after the page loads.
 
 ## Module map
 
 | Path | Responsibility |
 |---|---|
-| `src/…` | _…_ |
+| `index.html` | HTML shell that loads `src/main.tsx` |
+| `src/main.tsx` | Browser entry point: mounts `<App />` into `#root` |
+| `src/app.tsx` | Root component of the page |
+| `src/pricing.ts` | Template example module — delete once real code is tested |
 
 ## Main flows
 
@@ -23,7 +28,8 @@ _The two or three most important flows, step by step (e.g. "an order is placed")
 
 ## Constraints
 
-_Performance, security, privacy, platforms, offline use, budget — whatever shapes the design._
+- Runs offline once loaded; no server-side code.
+- Any static hosting must work: no runtime configuration or secrets.
 
 ## Key decisions
 
