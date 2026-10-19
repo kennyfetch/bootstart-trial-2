@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  # PRs: one group per branch, so a new push cancels the superseded run.
+  # Pushes to main: one group per commit, so no run waits behind or replaces another and every
+  # commit keeps its own result.
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    # This job name is the required status check set by scripts/setup-github.sh.
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Fail on a stale uv.lock instead of silently updating it (pnpm already does this in CI).
+      UV_LOCKED: "1"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      # Each toolchain is set up only when its manifest exists at the repository root.
+      - name: Set up uv (Python)
+        if: hashFiles('pyproject.toml') != ''
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set up pnpm
+        if: hashFiles('package.json') != ''
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: just setup
+      - run: just check

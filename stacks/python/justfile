@@ -1,0 +1,42 @@
+# Python stack: uv + Ruff + Pyright + pytest. Recipe contract: docs/STACKS.md.
+
+# Windows: PowerShell 5.1 reports any failing command as exit code 1 (pass/fail stays correct;
+# read the output for the real code).
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# List recipes
+default:
+    @{{ just_executable() }} --list
+
+# Install dependencies into .venv (CI sets UV_LOCKED=1, so a stale lockfile fails there)
+setup:
+    uv sync
+
+# Run the app locally (prints a hint until the project has an entry point)
+dev:
+    @echo "Nothing to run yet: make this recipe start the app, e.g. uv run python -m project_name"
+
+# Format code in place (also run by the Claude Code edit hook)
+format:
+    uv run ruff format .
+
+# Format and apply safe lint fixes
+fix: format
+    uv run ruff check --fix .
+
+# Check lockfile, formatting and lint rules without changing files
+lint:
+    uv lock --check
+    uv run ruff format --check .
+    uv run ruff check .
+
+# Static type checking
+typecheck:
+    uv run pyright
+
+# Run tests with coverage; extra arguments go to pytest
+test *args:
+    uv run pytest {{ args }}
+
+# Everything CI runs
+check: lint typecheck test
