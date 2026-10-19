@@ -19,12 +19,14 @@ storage, no network calls after the page loads.
 |---|---|
 | `index.html` | HTML shell that loads `src/main.tsx` |
 | `src/main.tsx` | Browser entry point: mounts `<App />` into `#root` |
-| `src/app.tsx` | Root component of the page |
+| `src/app.tsx` | Root component: conversion form and result |
+| `src/length.ts` | Length units and conversion, independent of React |
 | `src/pricing.ts` | Template example module — delete once real code is tested |
 
 ## Main flows
 
-_The two or three most important flows, step by step (e.g. "an order is placed")._
+- **Convert a length:** the user types a value and picks two units in `App`; on each change,
+  `convertLength` converts through the metre and `App` shows the result with 6 significant digits.
 
 ## Constraints
 
