@@ -78,11 +78,14 @@ describe("App", () => {
     expect(readResult()).toBe("1234567 m = 4050420 ft");
   });
 
-  it("keeps the previous unit when the selected unit is unknown", () => {
-    render(<App />);
+  it.each(["From", "To"])(
+    "keeps the previous %s unit when the selected unit is unknown",
+    (label) => {
+      render(<App />);
 
-    fireEvent.change(screen.getByLabelText("From"), { target: { value: "yd" } });
+      fireEvent.change(screen.getByLabelText(label), { target: { value: "yd" } });
 
-    expect(readResult()).toBe("1 m = 3.28084 ft");
-  });
+      expect(readResult()).toBe("1 m = 3.28084 ft");
+    },
+  );
 });

@@ -32,17 +32,37 @@ function describeConversion(valueText: string, fromUnit: LengthUnit, toUnit: Len
   return `${valueText} ${fromUnit} = ${resultFormat.format(converted)} ${toUnit}`;
 }
 
+interface UnitSelectProps {
+  label: string;
+  unit: LengthUnit;
+  onUnitChange: (unit: LengthUnit) => void;
+}
+
+function UnitSelect({ label, unit, onUnitChange }: UnitSelectProps) {
+  return (
+    <label>
+      {label}
+      <select
+        value={unit}
+        onChange={(event) => {
+          if (isLengthUnit(event.target.value)) onUnitChange(event.target.value);
+        }}
+      >
+        {LENGTH_UNITS.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 /** Root component of the unit converter page. */
 export function App() {
   const [valueText, setValueText] = useState("1");
   const [fromUnit, setFromUnit] = useState<LengthUnit>("m");
   const [toUnit, setToUnit] = useState<LengthUnit>("ft");
-
-  const unitOptions = LENGTH_UNITS.map((unit) => (
-    <option key={unit} value={unit}>
-      {unit}
-    </option>
-  ));
 
   return (
     <main>
@@ -56,28 +76,8 @@ export function App() {
             onChange={(event) => setValueText(event.target.value)}
           />
         </label>
-        <label>
-          From
-          <select
-            value={fromUnit}
-            onChange={(event) => {
-              if (isLengthUnit(event.target.value)) setFromUnit(event.target.value);
-            }}
-          >
-            {unitOptions}
-          </select>
-        </label>
-        <label>
-          To
-          <select
-            value={toUnit}
-            onChange={(event) => {
-              if (isLengthUnit(event.target.value)) setToUnit(event.target.value);
-            }}
-          >
-            {unitOptions}
-          </select>
-        </label>
+        <UnitSelect label="From" unit={fromUnit} onUnitChange={setFromUnit} />
+        <UnitSelect label="To" unit={toUnit} onUnitChange={setToUnit} />
       </form>
       <output>{describeConversion(valueText, fromUnit, toUnit)}</output>
     </main>
